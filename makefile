@@ -1,10 +1,10 @@
-practica2: generador p2-dogServer p2-dogClient
+practica3: generador p3-dogServer p3-dogClient
 	
 generador: generador.c 
 	gcc -o generadorExe generador.c -I.
-p2-dogServer: p2-dogServer.c 
-	gcc -o p2-dogServer p2-dogServer.c -lpthread -I.
-p2-dogClient: p2-dogClient.c 
-	gcc -o p2-dogClient p2-dogClient.c -I.
+p3-dogServer: p3-dogServer.c 
+	gcc -o p3-dogServer p3-dogServer.c -lpthread -I.
+p3-dogClient: p3-dogClient.c 
+	gcc -o p3-dogClient p3-dogClient.c -I.
 
 

@@ -88,7 +88,13 @@ void buscar(struct cliente cli){
 	char name[32];
 	int count;
 	int confirm;
-    ap=fopen("dataDogs.dat","rb+");//Abre el archivo en modo lectura binaria
+	pthread_mutex_lock(&mut);
+	printf("Inicio Mutex en buscar\n");
+	sem_wait(semaforo);
+	printf("Inicio Semaforo en buscar\n");
+	r = read(pipefd[0], buf, 10);
+	printf("Inicio Tuberia en buscar\n");    
+	ap=fopen("dataDogs.dat","rb+");//Abre el archivo en modo lectura binaria
     fseek(ap, 0, SEEK_END);//Señal al final del archivo
     count = (ftell(ap)/(sizeof(struct dogType)+1));//Contador de cantidad de registros en el archivo
     fclose(ap);
@@ -112,6 +118,12 @@ void buscar(struct cliente cli){
         }
         free(registro);
     }
+   	pthread_mutex_unlock(&mut);
+   	printf("Fin Mutex en buscar\n");
+   	sem_post(semaforo);
+   	printf("Fin semaforo en buscar\n");
+   	write(pipefd[1], "T", 1);
+   	printf("Fin tuberia en buscar\n");
     hacerserverLog(cli, 4, NULL, name);
 }
 
@@ -271,6 +283,12 @@ void ingresar(struct cliente cli){
 	int sdcli = cli.socket;//NO NECESITA SER BLOQUEADO
 	char comando[45];
 	char *name;
+	pthread_mutex_lock(&mut);
+	printf("Inicio Mutex en borrar\n");
+	sem_wait(semaforo);
+	printf("Inicio Semaforo en borrar\n");
+	r = read(pipefd[0], buf, 10);
+	printf("Inicio Tuberia en borrar\n");
 	send(sdcli,"Permiso concedido\n",100,0);
     struct dogType *p =(struct dogType*) malloc(sizeof(struct dogType));//Reserva espacio para estructura
 
@@ -288,6 +306,12 @@ void ingresar(struct cliente cli){
     free(p);
     numRegistros++;
     hacerserverLog(cli, 1, NULL, NULL);
+   	pthread_mutex_unlock(&mut);
+   	printf("Fin Mutex en ingresar\n");
+   	sem_post(semaforo);
+   	printf("Fin semaforo en ingresar\n");
+   	write(pipefd[1], "T", 1);
+   	printf("Fin tuberia en ingresar\n");
     send(sdcli,"Mascota ingresada correctamente",100,0);
 }
 
@@ -336,7 +360,7 @@ void iniciar(void *cli){
 
 int main(){
 	pthread_mutex_init(&mut, NULL); //INICIO MUTEX
-	semaforo= sem_open("semaforo_name", O_CREAT, 0700, NUM_HILOS);//INICIO SEMAFORO
+	semaforo= sem_open("semaforo_name", O_CREAT, 0700, 1);//INICIO SEMAFORO
 	 r = pipe(pipefd); //INICIO
     if(pipefd < 0){ 
         perror("Error pipe() "); 

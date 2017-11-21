@@ -33,7 +33,7 @@ socklen_t tama;
 	  return(buffer);
 }*/
 
-void imprimirRegistro(struct dogType *mascota,int index){ //imprime la mascota si se le pasa la mascota 
+void imprimirRegistro(struct dogType *mascota,int index){ //imprime la mascota que se pase como argumento
 
 	printf("Indice: %d\n",index+1);
 	printf("Nombre: %s \n",mascota->nombre);
@@ -45,6 +45,8 @@ void imprimirRegistro(struct dogType *mascota,int index){ //imprime la mascota s
 	printf("Sexo: %s\n",mascota->sexo);
 	printf("\n---------------------------------------------\n");		
 }
+
+//Funciones de envío y recepción de datos según tipo y respuesta
 
 float soloRecibirfloat(int sd){
       recv(sd,&bufferFloat,sizeof(float),0);
@@ -125,7 +127,8 @@ void ingresar(int sd){
     char sexo[1];
     recibirImprimirChar(sd);
 	struct dogType *p =(struct dogType*) malloc(sizeof(struct  dogType));//Reserva espacio para estructura
-	printf("Nombre: ");//Solicita los datos de la mascota
+	//Solicita los datos de la mascota
+	printf("Nombre: ");
 	scanf("%s", p->nombre);
 	printf("Tipo: ");
 	scanf("%s",p -> tipo);
@@ -139,26 +142,26 @@ void ingresar(int sd){
 	scanf("%f",&p -> peso);
 	printf("Sexo: ");
 	scanf("%s",p -> sexo);
-	send(sd,p,sizeof(struct dogType),0);
-	recibirImprimirChar(sd);
-	free(p);
+	send(sd,p,sizeof(struct dogType),0);//Envía la estructura
+	recibirImprimirChar(sd);//Recibe e imprime confirmación
+	free(p);//Libera espacio
 }
 
 void ver(int sd){
+	//Declaración de variables
 	char nombre[32];
 	float peso;
-	//recibirImprimirChar(sd);
-	float count =soloRecibirInt(sd);
+	float count =soloRecibirInt(sd);//Recibe tamaño
 	if (count == 0){
-		recibirImprimirChar(sd);
+		recibirImprimirChar(sd);//Si el tamaño es 0 recibe mensaje de error del servidor
 	}else{
-		recibirImprimirInt(sd);
-		recibirImprimirChar(sd);
+		recibirImprimirInt(sd);//Recibe e imprime cantidad de registros
+		recibirImprimirChar(sd);//Recibe e imprime petición de ingresar índice
 		int selected;
-		scanf("%d",&selected);
-		send(sd,&selected,sizeof(int),0);
+		scanf("%d",&selected);//Recibe de teclado índice deseado por usuario
+		send(sd,&selected,sizeof(int),0);//Envía índice a ver
 		if(selected<=count){
-
+			//Recibe datos necesarios
 			recv(sd,buffer,sizeof(nombre),0);
 			recv(sd,&peso,sizeof(float),0);	
 	
@@ -166,31 +169,31 @@ void ver(int sd){
 			char ruta[45];
 			sprintf(ruta, "%s%f.txt",nombre, peso);
 			FILE *archivoHistoria;
-			archivoHistoria = fopen(ruta,"w+");
+			archivoHistoria = fopen(ruta,"w+");//Crea archivo temporal de historia clínica
 			int tam;
-			recv(sd,&tam,sizeof(int),0);
-			printf("%d",tam);
+			recv(sd,&tam,sizeof(int),0);//Recibe el tamaño del archivo original
+			printf("%d",tam);//Imprime el tamaño
 			int i = 0;
-
+			//Función para recibir el archivo del servidor según su tamaño (parte a parte)
 			for (i = 0; i < tam; ++i)
 			{
 				char aux;
 				recv(sd,&aux,sizeof(char),0);
 				fputc(aux, archivoHistoria);
 			}
-			fclose(archivoHistoria);
+			fclose(archivoHistoria);//Cierra archivo
 
 			
 			char nano[80];
 			sprintf(nano, "nano %s", ruta);
-			system(nano);
+			system(nano);//Abre archivo en nano para editarlo
 
-			archivoHistoria = fopen(ruta,"r+");
-			fseek(archivoHistoria, 0, SEEK_END);
-			tam = ftell(archivoHistoria);
-			send(sd, &tam,sizeof(int),0);
-			fseek(archivoHistoria, 0, SEEK_SET);
-
+			archivoHistoria = fopen(ruta,"r+");//Abre archivo temporal
+			fseek(archivoHistoria, 0, SEEK_END);//Puntero al final
+			tam = ftell(archivoHistoria);//Tamaño
+			send(sd, &tam,sizeof(int),0);//Envía tamaño
+			fseek(archivoHistoria, 0, SEEK_SET);//Devuelve puntero
+			//Función para enviar el archivo al cliente según su tamaño (parte a parte)
 			for (i = 0; i < tam; ++i)
 			{
 				char aux;
@@ -198,11 +201,11 @@ void ver(int sd){
 				send(sd, &aux,sizeof(char),0);
 			}
 			
-			remove(ruta);
+			remove(ruta);//Elimina archivo temporal
 
-			recibirImprimirChar(sd);
+			recibirImprimirChar(sd);//Recibe confirmación
 		}else{
-			recibirImprimirChar(sd);
+			recibirImprimirChar(sd);//Recibe error
 		}
 
 	}
@@ -210,18 +213,17 @@ void ver(int sd){
 }
 
 void borrar(int sd){
-	//recibirImprimirChar(sd);
-	int count =soloRecibirInt(sd);
+	int count =soloRecibirInt(sd);//Recibe del servidor la cantidad de registros existentes
 	char c;
 	if (count == 0){
-		recibirImprimirChar(sd);
+		recibirImprimirChar(sd);//Si no hay registros, recibe este mensaje
 	}else{
-		recibirImprimirChar(sd);
-		int selected=recibir_ContestarInt(sd);
+		recibirImprimirChar(sd);//Imprime la cantidad de registros existentes
+		int selected=recibir_ContestarInt(sd);//Recibe mensaje que solicita índice, y lo responde con el índice ingresado por teclado
 		if(selected<=count){
-			recibirImprimirChar(sd);
+			recibirImprimirChar(sd);//Recibe confirmación
 		}else{
-			recibirImprimirChar(sd);
+			recibirImprimirChar(sd);//Recibe error
 		}
 	}
 }
@@ -229,27 +231,27 @@ void borrar(int sd){
 void buscar(int sd){
 
 	char selected[32];
-	int count = soloRecibirInt(sd);
-	printf("count: %d",count);
-	recibirImprimirChar(sd);
-	scanf("%s",selected);
-	send(sd, selected, sizeof(selected),0);
+	int count = soloRecibirInt(sd);//Recibe tamaño
+	printf("count: %d",count);//Imprime tamaño
+	recibirImprimirChar(sd);//Recibe solicitud de insertar nombre
+	scanf("%s",selected);//Recibe nombre por teclado
+	send(sd, selected, sizeof(selected),0);//Envía nombre al servidor
 	int actual = 0;
 	printf("\n---------------------------------------------\n");
     for(actual=0;actual<count;actual++){
-		int a = soloRecibirInt(sd);
-		if(a==1){
-			struct dogType *registro = malloc(sizeof(struct dogType));
-			recv(sd,registro,sizeof(struct dogType),0);
-			imprimirRegistro(registro,actual);
-			free(registro);
+		int a = soloRecibirInt(sd);//Recibe dígito de confirmación
+		if(a==1){//Si el dígito de confirmación es afirmativo
+			struct dogType *registro = malloc(sizeof(struct dogType));//Reserva espacio para la estructura
+			recv(sd,registro,sizeof(struct dogType),0);//Recibe estructura
+			imprimirRegistro(registro,actual);//Imprime registro de estructura recibida
+			free(registro);//Libera espacio en memoria
 		}
 	}
 }
 
 int main(int argc, char *argv[]){
 	sd = socket(AF_INET,SOCK_STREAM,0);
-	if(sd < 0){
+	if(sd < 0){//Si hay error en socket
         perror("\n-->Error en socket():");
         exit(-1);
     }
@@ -264,16 +266,16 @@ int main(int argc, char *argv[]){
         exit(-1);
     }
     float seleccion = 0;
-    while(seleccion != 5){
+    while(seleccion != 5){//Menú principal 
     	printf("Para seleccionar una de las siguientes opciones, pulse el número correspondiente seguido de la tecla enter:\n\
 			\n1. Ingresar registro\
 			\n2. Ver registro\
 			\n3. Borrar registro\
 			\n4. Buscar registro\
 			\n5. Salir\n\n");
-	   	scanf("%f", &seleccion);
-	  	send(sd,&seleccion,sizeof(float),0);
-		switch ((int)seleccion){
+	   	scanf("%f", &seleccion);//Recibe selección de opción
+	  	send(sd,&seleccion,sizeof(float),0);//Envía selección al servidor
+		switch ((int)seleccion){//Dependiendo de la selección, ejecuta una de las siguientes opciones
 	    case 1: //Ingresar
 	        esperar();
 	        ingresar(sd);
@@ -297,7 +299,7 @@ int main(int argc, char *argv[]){
 	    case 5://Salir
 	        send(sd,"Salir",30,0);
 	        break;  
-	    default://oops
+	    default://Selección incorrecta
 	        send(sd,"Mal",30,0);
 	  }
 

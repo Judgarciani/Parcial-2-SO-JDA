@@ -36,8 +36,8 @@ char *lowerCaseParse(char *try){ //pasa los strings a minuscula
 }
 
 int ingresarHash(char nombre[], struct Node **hashTable,int index){
-	unsigned long hashIndex = getHashValue(lowerCaseParse(nombre));
-	struct Node *registro = (struct Node*) malloc(sizeof(struct Node));
+	unsigned long hashIndex = getHashValue(lowerCaseParse(nombre));//Obtiene hash
+	struct Node *registro = (struct Node*) malloc(sizeof(struct Node));//Reserva espacio
 	registro->index = index + 1;
 
 	if(hashTable[hashIndex]==NULL){ //Unico en la lista
@@ -66,19 +66,16 @@ void bajar(struct dogType *p, struct Node **hashTable,int index){
 		fseek(ap, ((recorredor-1)*(sizeof(struct dogType)+1)), SEEK_SET);//Pone puntero en registro seleccionado
 		fread(registro,sizeof(struct dogType),1,ap);//Lee registro seleccionado
 		fclose(ap);//Cierra el archivo
-		//printf("actual: %d",actual);
-		//printf("count: %d",count);
-		if(strcmp(lowerCaseParse(p -> nombre),lowerCaseParse(registro -> nombre)) == 0 && actual < count){
-			//printf("si");
+		if(strcmp(lowerCaseParse(p -> nombre),lowerCaseParse(registro -> nombre)) == 0 && actual < count){//Compara
 			ap=fopen("dataDogs.dat","ab");//Abre archivo
 			fwrite(registro,sizeof(struct dogType),1,ap);//Escribe la estructura en el dat
 			fwrite("\n",1,1,ap);//Hace salto de línea
-			fclose(ap);
+			fclose(ap);//Cierra archivo
 			actual = actual + 1;
 			recorredor = recorredor + 1;
 		}else{
 			int i;
-			for(i=0;i<=49999;i++){
+			for(i=0;i<=49999;i++){//Actualiza la hash de los registros afectados
 				if(hashTable[i]!=NULL){
 					if(hashTable[i] -> index >= actual){
 						int act = hashTable[i] -> index;
@@ -86,8 +83,7 @@ void bajar(struct dogType *p, struct Node **hashTable,int index){
 					}
 				}
 			}
-			hashTable[getHashValue(p -> nombre)]->index = count - (actual-index);
-			//printf("de,a %d,%d",index,actual);
+			hashTable[getHashValue(p -> nombre)]->index = count - (actual-index);//Actualiza la hash del nombre recibido
 			snprintf(comando, sizeof(comando), "sed -i '%d,%dd' dataDogs.dat",index,(actual-1));//Borra línea en el archivo .dat correspondiente al indice seleccionado
 	        system(comando);//Envia comando a sistema		
 			checker = 1;
@@ -96,29 +92,30 @@ void bajar(struct dogType *p, struct Node **hashTable,int index){
 }
 
 void imprimirRegistro(struct dogType *registro){
-		printf("Nombre: %s \n" ,registro->nombre);
-	    printf("Tipo: %s\n",registro->tipo);
-		printf("Edad: %i\n",registro->edad);
-	    printf("Raza: %s\n",registro->raza);
-	    printf("Estatura: %i\n",registro->estatura);
-		printf("Peso: %f\n",registro->peso);
-		printf("Sexo: %s\n",registro->sexo);
-		printf("\n---------------------------------------------\n");
+	//Imprime un registro campo a campo
+	printf("Nombre: %s \n" ,registro->nombre);
+    printf("Tipo: %s\n",registro->tipo);
+	printf("Edad: %i\n",registro->edad);
+    printf("Raza: %s\n",registro->raza);
+    printf("Estatura: %i\n",registro->estatura);
+	printf("Peso: %f\n",registro->peso);
+	printf("Sexo: %s\n",registro->sexo);
+	printf("\n---------------------------------------------\n");
 }
 
 int buscarRegistroHash(char nombre[], struct Node**hashTable){
-	unsigned long hashIndex = getHashValue(lowerCaseParse(nombre));
+	unsigned long hashIndex = getHashValue(lowerCaseParse(nombre));//Obtiene hash
 	int encontrados = 0;
 	if(hashTable[hashIndex]==NULL){
-		return 0;
+		return 0;//Si no existe devuelve 0
 	}else{
-		return hashTable[hashIndex] -> index;
+		return hashTable[hashIndex] -> index;//Si existe devuelve el índice
 	}
 }
 
 void moverArriba(int index, struct Node**hashTable){
 	int i;
-	for(i=0;i<=49999;i++){
+	for(i=0;i<=49999;i++){//Actualiza todos los hash afectados
 		if(hashTable[i]!=NULL){
 			if(hashTable[i] -> index > index){
 				int act = hashTable[i] -> index;

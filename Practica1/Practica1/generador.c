@@ -57,13 +57,14 @@ int main(){
 	
 	fclose(ap);
 
-	for(i=0;i<17000;i++){//1716
+	for(i=0;i<1716;i++){
 		
 		struct dogType *data = malloc(sizeof(struct dogType));
 
 
 		//Se lee siguiente nombre y raza
 		c1=fscanf(nombres," %[^\n]",data -> nombre);
+		for(j=0;j<5828;j++){//5828
 			c2=fscanf(razas," %[^\n]",data -> raza);
 
 			//Genera datos aleatorios para edad, estatura y peso
@@ -74,31 +75,28 @@ int main(){
 			//Si el iterador es divisible entre 3, será macho. De lo contrario, será hembra
 			if(j%3 == 0){
 				strcpy(data -> sexo, "M");
-        		}else{
+        	}else{
 				strcpy(data -> sexo, "H");
-        		}
-
+        	}
+			//Si el iterador es divisible en 2 es perro, de lo contrario es gato.
 			if(j%2 == 0){
 				strcpy(data -> tipo, "Perro");
-	        	}else{
+	        }else{
 				strcpy(data -> tipo, "Gato");
-	        	}
+	        }
 			
-		        //Si se llega al final del archivo con los nombres, manda el apuntador al principio del mismo
-	        	if(c1==EOF)
-	        	{
-	        		rewind(nombres);
-	        	}
-	        	if(c2==EOF)
-	        	{
-    	    		rewind(razas);
-    	    	}
+		    //Si se llega al final del archivo con los nombres, manda el apuntador al principio del mismo
+	        if(c1==EOF){
+	        	rewind(nombres);
+	        }if(c2==EOF){
+    	    	rewind(razas);
+    	    }
 			
-			ap = fopen("dataDogs.dat", "ab");
-			fwrite(data, sizeof(struct dogType), 1, ap);
-			fwrite("\n",1,1,ap);
-			fclose(ap);
-		
+			ap = fopen("dataDogs.dat", "ab");//Abre el archivo
+			fwrite(data, sizeof(struct dogType), 1, ap);//Copia la estructura al archivo
+			fwrite("\n",1,1,ap);//Pone un salto de línea
+			fclose(ap);//Cierra el archivo
+		}
 	}			
 }
 

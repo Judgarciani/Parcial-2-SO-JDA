@@ -24,7 +24,7 @@ void esperar(){ //Función que solicita presionar enter para continuar
 void buscar(){	
 	char name[32];
 	printf("Inserte el nombre del animal a buscar: ");//Solicita nombre a buscar
-	scanf("%s",name);
+	scanf("%s",name);//Recibe nombre por teclado
 	int actual = buscarRegistroHash(name,hashTable);
 	int checker = 0;
 	int count;
@@ -32,7 +32,7 @@ void buscar(){
 	ap=fopen("dataDogs.dat","rb+");//Abre el archivo en modo lectura binaria
 	fseek(ap, 0, SEEK_END);//Señal al final del archivo
 	count = (ftell(ap)/(sizeof(struct dogType)+1));//Contador de cantidad de registros en el archivo
-	fclose(ap);
+	fclose(ap);//Cierra archivo
 	if(actual != 0){
 		while(checker==0){
 		struct dogType *registro;
@@ -42,11 +42,9 @@ void buscar(){
 			fread(registro,sizeof(struct dogType),1,ap);//Lee registro seleccionado
 			fclose(ap);
 			printf("\n---------------------------------------------\n");
-			//printf("%s",registro -> nombre);
-			//printf("%s",name);
-			if(strcmp(lowerCaseParse(name),lowerCaseParse(registro -> nombre))==0){
-				printf("\nRegistro #%d:\n\n", actual);
-				imprimirRegistro(registro);
+			if(strcmp(lowerCaseParse(name),lowerCaseParse(registro -> nombre))==0){//Revisa si coincide
+				printf("\nRegistro #%d:\n\n", actual);//Imprime el índice del registro
+				imprimirRegistro(registro);//Imprime el registro coincidente
 				if(actual < count){
 					actual = actual + 1;
 				}else{
@@ -195,7 +193,8 @@ int main(){
 		printf("3. Borrar registro\n");
 		printf("4. Buscar registro\n");
 		printf("5. Salir\n\n");
-		scanf("%i", &seleccion);
+		scanf("%i", &seleccion);//Recibe la seleccion
+		//Realiza una acción dependiendo de la selección
 		if(seleccion == 5){
 			esperar();
 			exit(0);

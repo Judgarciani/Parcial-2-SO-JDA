@@ -51,82 +51,56 @@ int main(){
 	
 	//Variable del iterador
 	int i;
-	int j;
+	
+	//Variables señaladoras para saber si los archivos llegan al final.
 	int c1=0;
 	int c2=0;
 	
 	fclose(ap);
 
-	for(i=0;i<1716;i++){
+	for(i=0;i<17000;i++){//1716
 		
+		//Separa espacio de memoria para la estructura
 		struct dogType *data = malloc(sizeof(struct dogType));
 
 
 		//Se lee siguiente nombre y raza
 		c1=fscanf(nombres," %[^\n]",data -> nombre);
-		for(j=0;j<5828;j++){//5828
-			c2=fscanf(razas," %[^\n]",data -> raza);
+		c2=fscanf(razas," %[^\n]",data -> raza);
 
-			//Genera datos aleatorios para edad, estatura y peso
-			data -> edad = aleatorioEntero(1,20);
-			data -> estatura = aleatorioEntero(5,100);
-			data -> peso = aleatorioReal(3,100);
+		//Genera datos aleatorios para edad, estatura y peso
+		data -> edad = aleatorioEntero(1,20);
+		data -> estatura = aleatorioEntero(5,100);
+		data -> peso = aleatorioReal(3,100);
 		
-			//Si el iterador es divisible entre 3, será macho. De lo contrario, será hembra
-			if(j%3 == 0){
-				strcpy(data -> sexo, "M");
-        		}else{
-				strcpy(data -> sexo, "H");
-        		}
-
-			if(j%2 == 0){
-				strcpy(data -> tipo, "Perro");
-	        	}else{
-				strcpy(data -> tipo, "Gato");
-	        	}
+		//Si el iterador es divisible entre 3, será macho. De lo contrario, será hembra
+		if(i%3 == 0){
+			strcpy(data -> sexo, "M");
+       	}else{
+			strcpy(data -> sexo, "H");
+       	}
+		
+		//Los nombres en posición par son perros, en posición impar son gatos
+		if(i%2 == 0){
+			strcpy(data -> tipo, "Perro");
+        }else{
+			strcpy(data -> tipo, "Gato");
+        }
 			
-		        //Si se llega al final del archivo con los nombres, manda el apuntador al principio del mismo
-	        	if(c1==EOF)
-	        	{
-	        		rewind(nombres);
-	        	}
-	        	if(c2==EOF)
-	        	{
-    	    		rewind(razas);
-    	    	}
+		//Si se llega al final del archivo con los nombres o las razas, manda el apuntador al principio del mismo
+	    if(c1==EOF){
+	       	rewind(nombres);
+	    }
+	    if(c2==EOF){
+			rewind(razas);
+    	}
 			
-			ap = fopen("dataDogs.dat", "ab");
-			fwrite(data, sizeof(struct dogType), 1, ap);
-			fwrite("\n",1,1,ap);
-			fclose(ap);
-		}
+		//Abre el archivo e inserta la estructura del perro creado
+		ap = fopen("dataDogs.dat", "ab");
+		fwrite(data, sizeof(struct dogType), 1, ap);
+		//Inserta un salto de línea y cierra el archivo
+		fwrite("\n",1,1,ap);
+		fclose(ap);
+		
 	}			
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

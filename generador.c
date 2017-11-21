@@ -57,7 +57,7 @@ int main(){
 	
 	fclose(ap);
 
-	for(i=0;i<17000;i++){//1716
+	for(i=0;i<10000000;i++){//1716
 		
 		struct dogType *data = malloc(sizeof(struct dogType));
 

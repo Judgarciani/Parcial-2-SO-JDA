@@ -76,24 +76,24 @@ int main(){
 		//Si el iterador es divisible entre 3, será macho. De lo contrario, será hembra
 		if(i%3 == 0){
 			strcpy(data -> sexo, "M");
-       	}else{
+       		}else{
 			strcpy(data -> sexo, "H");
-       	}
+       		}
 		
 		//Los nombres en posición par son perros, en posición impar son gatos
 		if(i%2 == 0){
 			strcpy(data -> tipo, "Perro");
-        }else{
+        	}else{
 			strcpy(data -> tipo, "Gato");
-        }
+        	}
 			
 		//Si se llega al final del archivo con los nombres o las razas, manda el apuntador al principio del mismo
-	    if(c1==EOF){
-	       	rewind(nombres);
-	    }
-	    if(c2==EOF){
+	    	if(c1==EOF){
+	       		rewind(nombres);
+	    	}
+	    	if(c2==EOF){
 			rewind(razas);
-    	}
+    		}
 			
 		//Abre el archivo e inserta la estructura del perro creado
 		ap = fopen("dataDogs.dat", "ab");

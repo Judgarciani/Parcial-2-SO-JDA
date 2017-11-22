@@ -73,30 +73,30 @@ void borrar(){
 	}else{
 		struct dogType *p = malloc(sizeof(struct dogType));
 		struct dogType *past = malloc(sizeof(struct dogType));
-        printf("%d registros existentes\n", count);//Muestra la cantidad de registros existentes
-        fclose(ap);
+        	printf("%d registros existentes\n", count);//Muestra la cantidad de registros existentes
+        	fclose(ap);
 		printf("Ingrese el índice de la mascota que desea eliminar: ");
-        scanf("%d", &selected);//Solicita que se ingrese el indice del registro a borrar
+        	scanf("%d", &selected);//Solicita que se ingrese el indice del registro a borrar
 		if(selected<=count){
-	        ap=fopen("dataDogs.dat","rb+");//Abre el archivo en lectura binaria
+	        	ap=fopen("dataDogs.dat","rb+");//Abre el archivo en lectura binaria
 			fseek(ap, ((selected-1)*(sizeof(struct dogType)+1)), SEEK_SET);//Ubica el apuntador en el índice seleccionado
-	        fread(past,(sizeof(struct dogType)+1),1,ap);//Lee el registro en el índice
-            snprintf(comando, sizeof(comando), "sed -i '%dd' dataDogs.dat",selected);//Borra línea en el archivo .dat correspondiente al indice seleccionado
-	        system(comando);//Envia comando a sistema		
+	        	fread(past,(sizeof(struct dogType)+1),1,ap);//Lee el registro en el índice
+            		snprintf(comando, sizeof(comando), "sed -i '%dd' dataDogs.dat",selected);//Borra línea en el archivo .dat correspondiente al indice seleccionado
+	        	system(comando);//Envia comando a sistema		
 			fclose(ap);//Cierra archivo
 			//Si era el primero reviso si hay más  
 			int estaAca = (hashTable[getHashValue(lowerCaseParse(past -> nombre))] -> index);
 			strcpy(nombreActual, past -> nombre);
 			if((estaAca)==selected){
-                ap=fopen("dataDogs.dat","rb+");//Abre el archivo en lectura binaria
+                		ap=fopen("dataDogs.dat","rb+");//Abre el archivo en lectura binaria
 				fseek(ap, ((selected-1)*(sizeof(struct dogType)+1)), SEEK_SET);//Ubica el apuntador en el índice seleccionado
-	        	fread(p,(sizeof(struct dogType)+1),1,ap);//Lee el registro en el índice
+	        		fread(p,(sizeof(struct dogType)+1),1,ap);//Lee el registro en el índice
 				if(strcmp(lowerCaseParse(nombreActual),lowerCaseParse(p -> nombre))!=0){
 					hashTable[getHashValue(nombreActual)]=NULL;
 				}
-            }
+            		}
 			moverArriba(selected,hashTable);
-	        printf("Registro con nombre %s borrado correctamente",nombreActual);//Confirma
+	        	printf("Registro con nombre %s borrado correctamente",nombreActual);//Confirma
 		}else{
 			printf("Selección inválida, vuelva a intentarlo.");
 		}	

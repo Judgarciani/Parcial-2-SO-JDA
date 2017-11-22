@@ -49,55 +49,55 @@ void imprimirRegistro(struct dogType *mascota,int index){ //imprime la mascota q
 //Funciones de envío y recepción de datos según tipo y respuesta
 
 float soloRecibirfloat(int sd){
-      recv(sd,&bufferFloat,sizeof(float),0);
-	  return(bufferFloat);
+      	recv(sd,&bufferFloat,sizeof(float),0);
+	return(bufferFloat);
 }
 
 int soloRecibirInt(int sd){
-      recv(sd,&bufferInt,sizeof(int),0);
-	  return(bufferInt);
+      	recv(sd,&bufferInt,sizeof(int),0);
+	return(bufferInt);
 }
 
 void recibirImprimirChar(int sd){
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
+      	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
 }
 
 void recibirImprimirFloat(int sd){
-      recv(sd,&bufferFloat,sizeof(float),0);
-	  printf("\n%f\n" , bufferFloat);
+      	recv(sd,&bufferFloat,sizeof(float),0);
+	printf("\n%f\n" , bufferFloat);
 }
 
 void recibirImprimirInt(int sd){
-      recv(sd,&bufferInt,sizeof(int),0);
-	  printf("\n%d\n" , bufferInt);
+      	recv(sd,&bufferInt,sizeof(int),0);
+	printf("\n%d\n" , bufferInt);
 }
 
 void recibir_ContestarChar(int sd, int tam){
-      char respuesta[tam];
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
-	  scanf("%s",respuesta);
-	  send(sd,respuesta,sizeof(respuesta),0);
-      strcpy(respuesta,"");
+      	char respuesta[tam];
+      	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
+	scanf("%s",respuesta);
+	send(sd,respuesta,sizeof(respuesta),0);
+      	strcpy(respuesta,"");
 }
 
 float recibir_Contestarfloat(int sd){
-      float respuesta;
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
-	  scanf("%f", &respuesta);
-	  send(sd,&respuesta,sizeof(float),0);
-	  return respuesta;
+      	float respuesta;
+      	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
+	scanf("%f", &respuesta);
+	send(sd,&respuesta,sizeof(float),0);
+	return respuesta;
 }
 
 int recibir_ContestarInt(int sd){
-      int respuesta;
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
-	  scanf("%d", &respuesta);
-	  send(sd,&respuesta,sizeof(int),0);
-	  return respuesta;
+      	int respuesta;
+      	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
+	scanf("%d", &respuesta);
+	send(sd,&respuesta,sizeof(int),0);
+	return respuesta;
 }
 
 void esperar(){ //Función que solicita presionar enter para continuar
@@ -118,14 +118,14 @@ void esperar(){ //Función que solicita presionar enter para continuar
 
 void ingresar(int sd){
    
-    char nombre[32];
-    char tipo[32];
-    int edad;
-    char raza[16];
-    int estatura;
-    float peso;
-    char sexo[1];
-    recibirImprimirChar(sd);
+    	char nombre[32];
+    	char tipo[32];
+    	int edad;
+    	char raza[16];
+    	int estatura;
+    	float peso;
+    	char sexo[1];
+    	recibirImprimirChar(sd);
 	struct dogType *p =(struct dogType*) malloc(sizeof(struct  dogType));//Reserva espacio para estructura
 	//Solicita los datos de la mascota
 	printf("Nombre: ");
@@ -238,7 +238,7 @@ void buscar(int sd){
 	send(sd, selected, sizeof(selected),0);//Envía nombre al servidor
 	int actual = 0;
 	printf("\n---------------------------------------------\n");
-    for(actual=0;actual<count;actual++){
+    	for(actual=0;actual<count;actual++){
 		int a = soloRecibirInt(sd);//Recibe dígito de confirmación
 		if(a==1){//Si el dígito de confirmación es afirmativo
 			struct dogType *registro = malloc(sizeof(struct dogType));//Reserva espacio para la estructura
@@ -252,9 +252,9 @@ void buscar(int sd){
 int main(int argc, char *argv[]){
 	sd = socket(AF_INET,SOCK_STREAM,0);
 	if(sd < 0){//Si hay error en socket
-        perror("\n-->Error en socket():");
-        exit(-1);
-    }
+        	perror("\n-->Error en socket():");
+        	exit(-1);
+    	}
 	client.sin_family = AF_INET;
 	client.sin_port = htons(PORT);
 	client.sin_addr.s_addr = inet_addr(argv[1]);
@@ -262,12 +262,12 @@ int main(int argc, char *argv[]){
 	tama = sizeof(struct sockaddr_in);
 	r = connect(sd, (struct sockaddr*)& client,tama);
 	if(r < 0){
-        perror("\n-->Error en connect(): ");
-        exit(-1);
-    }
-    float seleccion = 0;
-    while(seleccion != 5){//Menú principal 
-    	printf("Para seleccionar una de las siguientes opciones, pulse el número correspondiente seguido de la tecla enter:\n\
+        	perror("\n-->Error en connect(): ");
+        	exit(-1);
+    	}
+    	float seleccion = 0;
+    	while(seleccion != 5){//Menú principal 
+    		printf("Para seleccionar una de las siguientes opciones, pulse el número correspondiente seguido de la tecla enter:\n\
 			\n1. Ingresar registro\
 			\n2. Ver registro\
 			\n3. Borrar registro\
@@ -276,32 +276,32 @@ int main(int argc, char *argv[]){
 	   	scanf("%f", &seleccion);//Recibe selección de opción
 	  	send(sd,&seleccion,sizeof(float),0);//Envía selección al servidor
 		switch ((int)seleccion){//Dependiendo de la selección, ejecuta una de las siguientes opciones
-	    case 1: //Ingresar
-	        esperar();
-	        ingresar(sd);
-	        esperar();
-	        break; 
-	    case 2://Ver
-	        esperar();
-	        ver(sd);
-	        esperar();
-	        break; 
-	    case 3://Borrar
-	        esperar();
-			borrar(sd);
-			esperar();
-	        break;  
-	    case 4://Buscar
-	        esperar();
-			buscar(sd);
-			esperar();
-	        break;  
-	    case 5://Salir
-	        send(sd,"Salir",30,0);
-	        break;  
-	    default://Selección incorrecta
-	        send(sd,"Mal",30,0);
-	  }
+	    		case 1: //Ingresar
+				esperar();
+				ingresar(sd);
+				esperar();
+				break; 
+	    		case 2://Ver
+				esperar();
+				ver(sd);
+				esperar();
+				break; 
+			case 3://Borrar
+	        		esperar();
+				borrar(sd);
+				esperar();
+	        		break;  
+	    		case 4://Buscar
+				esperar();
+				buscar(sd);
+				esperar();
+				break;  
+	    		case 5://Salir
+	        		send(sd,"Salir",30,0);
+	        		break;  
+	    		default://Selección incorrecta
+	        		send(sd,"Mal",30,0);
+	  	}
 
 	}
 	close(sd);

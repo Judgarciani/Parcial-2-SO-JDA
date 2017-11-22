@@ -64,68 +64,38 @@ int main(){
 
 		//Se lee siguiente nombre y raza
 		c1=fscanf(nombres," %[^\n]",data -> nombre);
-			c2=fscanf(razas," %[^\n]",data -> raza);
+		c2=fscanf(razas," %[^\n]",data -> raza);
 
-			//Genera datos aleatorios para edad, estatura y peso
-			data -> edad = aleatorioEntero(1,20);
-			data -> estatura = aleatorioEntero(5,100);
-			data -> peso = aleatorioReal(3,100);
+		//Genera datos aleatorios para edad, estatura y peso
+		data -> edad = aleatorioEntero(1,20);
+		data -> estatura = aleatorioEntero(5,100);
+		data -> peso = aleatorioReal(3,100);
 		
-			//Si el iterador es divisible entre 3, será macho. De lo contrario, será hembra
-			if(j%3 == 0){
-				strcpy(data -> sexo, "M");
-        		}else{
-				strcpy(data -> sexo, "H");
-        		}
+		//Si el iterador es divisible entre 3, será macho. De lo contrario, será hembra
+		if(j%3 == 0){
+			strcpy(data -> sexo, "M");
+        	}else{
+			strcpy(data -> sexo, "H");
+		}
 
-			if(j%2 == 0){
-				strcpy(data -> tipo, "Perro");
-	        	}else{
-				strcpy(data -> tipo, "Gato");
-	        	}
-			
-		        //Si se llega al final del archivo con los nombres, manda el apuntador al principio del mismo
-	        	if(c1==EOF)
-	        	{
-	        		rewind(nombres);
-	        	}
-	        	if(c2==EOF)
-	        	{
+		if(j%2 == 0){
+			strcpy(data -> tipo, "Perro");
+        	}else{
+			strcpy(data -> tipo, "Gato");
+	       	}
+		
+	        //Si se llega al final del archivo con los nombres, manda el apuntador al principio del mismo
+	        if(c1==EOF){
+	        	rewind(nombres);
+	       	}
+	       	if(c2==EOF){
     	    		rewind(razas);
     	    	}
 			
-			ap = fopen("dataDogs.dat", "ab");
-			fwrite(data, sizeof(struct dogType), 1, ap);
-			fwrite("\n",1,1,ap);
-			fclose(ap);
+		ap = fopen("dataDogs.dat", "ab");
+		fwrite(data, sizeof(struct dogType), 1, ap);
+		fwrite("\n",1,1,ap);
+		fclose(ap);
 		
 	}			
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -89,11 +89,11 @@ void buscar(struct cliente cli){
 	char name[32];
 	int count;
 	int confirm;
-	pthread_mutex_lock(&mut);
+	pthread_mutex_lock(&mut);//bloqueo mutex
 	printf("Inicio Mutex en buscar\n");
-	sem_wait(semaforo);
+	sem_wait(semaforo);//bloqueo semaforo
 	printf("Inicio Semaforo en buscar\n");
-	r = read(pipefd[0], buf, 10);
+	r = read(pipefd[0], buf, 10);//bloqueo pipe
 	printf("Inicio Tuberia en buscar\n");    
 	ap=fopen("dataDogs.dat","rb+");//Abre el archivo en modo lectura binaria
     	fseek(ap, 0, SEEK_END);//Señal al final del archivo
@@ -119,11 +119,11 @@ void buscar(struct cliente cli){
         	}
         	free(registro);//Libera espacio en memoria
     	}
-   	pthread_mutex_unlock(&mut);
+   	pthread_mutex_unlock(&mut);//desbloqueo mutex
    	printf("Fin Mutex en buscar\n");
-   	sem_post(semaforo);
+   	sem_post(semaforo);//desbloqueo semaforo
    	printf("Fin semaforo en buscar\n");
-   	write(pipefd[1], "T", 1);
+   	write(pipefd[1], "T", 1);//desbloqueo pipe
    	printf("Fin tuberia en buscar\n");
     	hacerserverLog(cli, 4, NULL, name);
 }

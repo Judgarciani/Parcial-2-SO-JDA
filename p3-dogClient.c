@@ -49,55 +49,55 @@ void imprimirRegistro(struct dogType *mascota,int index){ //imprime la mascota s
 //Funciones de envio y recepcion de datos segun tipo de respuesta
 
 float soloRecibirfloat(int sd){
-      recv(sd,&bufferFloat,sizeof(float),0);
-	  return(bufferFloat);
+      	recv(sd,&bufferFloat,sizeof(float),0);
+	return(bufferFloat);
 }
 
 int soloRecibirInt(int sd){
-      recv(sd,&bufferInt,sizeof(int),0);
-	  return(bufferInt);
+      	recv(sd,&bufferInt,sizeof(int),0);
+	return(bufferInt);
 }
 
 void recibirImprimirChar(int sd){
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
+      	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
 }
 
 void recibirImprimirFloat(int sd){
-      recv(sd,&bufferFloat,sizeof(float),0);
-	  printf("\n%f\n" , bufferFloat);
+      	recv(sd,&bufferFloat,sizeof(float),0);
+	printf("\n%f\n" , bufferFloat);
 }
 
 void recibirImprimirInt(int sd){
-      recv(sd,&bufferInt,sizeof(int),0);
-	  printf("\n%d\n" , bufferInt);
+      	recv(sd,&bufferInt,sizeof(int),0);
+	printf("\n%d\n" , bufferInt);
 }
 
 void recibir_ContestarChar(int sd, int tam){
-      char respuesta[tam];
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
-	  scanf("%s",respuesta);
-	  send(sd,respuesta,sizeof(respuesta),0);
-      strcpy(respuesta,"");
+	char respuesta[tam];
+	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
+	scanf("%s",respuesta);
+	send(sd,respuesta,sizeof(respuesta),0);
+      	strcpy(respuesta,"");
 }
 
 float recibir_Contestarfloat(int sd){
-      float respuesta;
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
-	  scanf("%f", &respuesta);
-	  send(sd,&respuesta,sizeof(float),0);
-	  return respuesta;
+      	float respuesta;
+      	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
+	scanf("%f", &respuesta);
+	send(sd,&respuesta,sizeof(float),0);
+	return respuesta;
 }
 
 int recibir_ContestarInt(int sd){
-      int respuesta;
-      recv(sd,buffer,266,0);
-	  printf("\n%s\n" , buffer);
-	  scanf("%d", &respuesta);
-	  send(sd,&respuesta,sizeof(int),0);
-	  return respuesta;
+      	int respuesta;
+      	recv(sd,buffer,266,0);
+	printf("\n%s\n" , buffer);
+	scanf("%d", &respuesta);
+	send(sd,&respuesta,sizeof(int),0);
+  	return respuesta;
 }
 
 void esperar(){ //Función que solicita presionar enter para continuar

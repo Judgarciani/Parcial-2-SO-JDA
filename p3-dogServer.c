@@ -84,7 +84,7 @@ char *lowerCaseParse(char *try){ //pasa los strings a minuscula
 }
 
 void buscar(struct cliente cli){
-	int sdcli = cli.socket; //NO NECESITA SER BLOQUEADO
+	int sdcli = cli.socket;
 	char name[32];
 	int count;
 	int confirm;

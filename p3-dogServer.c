@@ -38,36 +38,36 @@ void hacerserverLog(struct cliente cli, int opcion, int *numFun, char *nombre){
 	char num[16];
 	serverLog = fopen("serverDogs.log","a+");
 	time_t tiempo = time(0);
-    struct tm *tlocal = localtime(&tiempo);
-    char output[128];
-    strftime(output, 128, "%d/%m/%y %H:%M:%S", tlocal);
-    fputs("Fecha y hora: ", serverLog);
-    fputs(output , serverLog);
+    	struct tm *tlocal = localtime(&tiempo);
+    	char output[128];
+    	strftime(output, 128, "%d/%m/%y %H:%M:%S", tlocal);
+    	fputs("Fecha y hora: ", serverLog);
+    	fputs(output , serverLog);
 	fputs("   Cliente(IP: ", serverLog);
 	fputs(inet_ntoa(cli.dir.sin_addr), serverLog);
 	switch (opcion){
-	    case 1: //Ingresar
-	    fputs(") Registro ingresado, # de registros = ", serverLog);
-	    sprintf(num, "%d", numRegistros);
-	    fputs(num, serverLog);
-	    break; 
-	    case 2:
-	   	fputs(") Registro # ", serverLog);
-	    sprintf(num, "%d", *numFun);
-	    fputs(num, serverLog);
-	    fputs(" visto" , serverLog);
-	    break; 
-	    case 3:
-	    fputs(") Registro #", serverLog);
-	    sprintf(num, "%d", *numFun);
-	    fputs(num, serverLog);
-	    fputs(" borrado",serverLog);
-	    break;  
-	    case 4:
-	    fputs(") Registro con nombre ", serverLog);
-	    fputs(nombre, serverLog);
-	    fputs(" buscado",serverLog);
-	    break; 
+		case 1: //Ingresar
+		    fputs(") Registro ingresado, # de registros = ", serverLog);
+		    sprintf(num, "%d", numRegistros);
+		    fputs(num, serverLog);
+		    break; 
+	    	case 2:
+		    fputs(") Registro # ", serverLog);
+		    sprintf(num, "%d", *numFun);
+		    fputs(num, serverLog);
+		    fputs(" visto" , serverLog);
+		    break; 
+	    	case 3:
+		    fputs(") Registro #", serverLog);
+		    sprintf(num, "%d", *numFun);
+		    fputs(num, serverLog);
+		    fputs(" borrado",serverLog);
+		    break;  
+	    	case 4:
+		    fputs(") Registro con nombre ", serverLog);
+		    fputs(nombre, serverLog);
+		    fputs(" buscado",serverLog);
+		    break; 
 	}
 	fputs("\n", serverLog);
 	fclose(serverLog);  
@@ -146,8 +146,8 @@ void borrar(struct cliente cli){
 	printf("Inicio Semaforo en borrar\n");
 	r = read(pipefd[0], buf, 10);//bloqueo por pipe
 	printf("Inicio Tuberia en borrar\n");
-    ap=fopen("dataDogs.dat","rb+");//Abre el archivo en modo lectura binaria
-    fseek(ap, 0, SEEK_END);//Señal al final del archivo
+    	ap=fopen("dataDogs.dat","rb+");//Abre el archivo en modo lectura binaria
+    	fseek(ap, 0, SEEK_END);//Señal al final del archivo
     	count = (ftell(ap)/(sizeof(struct dogType)+1));//Contador de cantidad de registros en el archivo
     	fclose(ap);    //Cierra el archivo
     	send(sdcli,&count,sizeof(int),0);//Envía la cantidad de registros existentes al cliente
@@ -211,7 +211,7 @@ void ver(struct cliente cli){
 		printf("Inicio Semaforo en ver\n");
 		r = read(pipefd[0], buf, 10); // bloqueo por pipe
 		printf("Inicio Tuberia en ver\n");
-        send(sdcli,"Ingrese el índice de la mascota que desea ver: ",100,0);//Solicita que se ingrese el indice del registro a ver
+        	send(sdcli,"Ingrese el índice de la mascota que desea ver: ",100,0);//Solicita que se ingrese el indice del registro a ver
         	recv(sdcli,&selected,sizeof(int),0);//Recibe el índice a ver
         	if(selected<=count){
             		ap=fopen("dataDogs.dat","rb");//Abre archivo
